@@ -66,13 +66,15 @@ python monitor.py -p BTC-USD,ETH-USD,BCH-USD,XLM-USD
 
 ![Example with monitoring several products at once](images/3.gif)
 
-By default, the script shows two plots per figure. However, this can be modified using the `-f` switch. In addition, the rate at which the plots are updated can be changed from the default of once every 1000 milliseconds to a user-defined value using the `-i` switch. Each plot retains $1000$ data points by default. Once more than $1000$ data points have been received, older data points are truncated. This value can be modified by providing a new value by using the `-m` switch.
+By default, the script shows two plots per figure. However, this can be modified using the `-f` switch. In addition, the rate at which the plots are updated can be changed from the default of once every 1000 milliseconds to a user-defined value using the `-i` switch. Each plot retains 1000 data points by default. Once more than 1000 data points have been received, older data points are truncated. This value can be modified by providing a new value by using the `-m` switch.
 
 ```
 > python monitor.py -p BTC-USD,ETH-USD,BCH-USD,XLM-USD -f 4 -i 100 -m 25
 ```
 
 ![Example with non-default values of several parameters](images/4.gif)
+
+Products supported by coinbase can be viewed with the help of the `-s`, `-c`, or `-q` switches. See [usage](#usage) for details.
 
 ## Epilogue
 Did you have fun using this script? Did you find issues? Reach out to me! I look forward to your feedback.
