@@ -92,24 +92,39 @@ class myWebsocketClient(cbpro.WebsocketClient):
     def on_close(self):
         print("-- Goodbye! --")
 
+# error checking to make sure valid products are provided for monitoring
+products = list(set(args.products.split(',')))
+public_client = cbpro.PublicClient()
+cb_products = set()
+for p in public_client.get_products():
+    cb_products.add(p['id'])
+m_products = []
+for p in products:
+    if p in cb_products:
+        m_products.append(p)
+    else:
+        print(">> WARN - {} is not supported by coinbase. Skipping this product".format(p))
+
+if len(m_products) == 0:
+    exit(0)
+
 # connect to the websocket client and start receiving messages
-products = args.products.split(',')
-wsClient = myWebsocketClient(products=products)
+wsClient = myWebsocketClient(products=m_products)
 wsClient.start()
 
-print(">> Monitoring client started successfully")
-print(">> Monitoring: " + str(products))
+print(">> INFO - Monitoring client started successfully")
+print(">> INFO - Monitoring: " + str(m_products))
 
 # configure plots
 style.use('bmh')
-numplots = len(products)
+numplots = len(m_products)
 plotsperfig = args.plots_per_fig
 if numplots > plotsperfig:
     numfigs = numplots // plotsperfig if numplots % plotsperfig == 0 else (numplots // plotsperfig) + 1
 else:
     numfigs = 1
 
-productlist = dq(products)
+productlist = dq(m_products)
 axesc = dict()
 figs = []
 for f in range(numfigs):
@@ -128,7 +143,7 @@ for f in range(numfigs):
 
 # function refreshes axes with latest data when called
 def animate(i):
-    for p in products:
+    for p in m_products:
         graph_data = wsClient.price_data[p]['data']
         axesc[p].clear()
         axesc[p].plot(graph_data, label=p)
